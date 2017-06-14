@@ -35,11 +35,11 @@ namespace UploadSFCS
             //check ini 
             InitIniFile();
             displayMsg();
+            checkfolder_file();
             //check web
             if (!checkWebSite(webSite))
             {
                 //error
-
             }
 
 
@@ -77,6 +77,8 @@ namespace UploadSFCS
                     SaveLog(PPID + "->upload NG," + result);
                     Console.WriteLine(DateTime.Now.ToString("yyyyMMddHHmmss") + " " + PPID + "->upload NG," + result);
                 }
+
+                KillProcess();
             }
             else 
             {
@@ -146,6 +148,23 @@ namespace UploadSFCS
 
         }
 
+
+
+        public static void checkfolder_file()
+        {
+            string appFolder = Application.StartupPath + @"\UploadSFCS";
+            string filePath = appFolder + @"\" + @DateTime.Now.ToString("yyyyMMdd") + ".txt";
+            //string log = DateTime.Now.ToString("yyyyMMddHHmmss") + " " + logcontent + "\r\n";
+            //check folder & file
+            if (!Directory.Exists(appFolder))
+                Directory.CreateDirectory(appFolder);
+            if (!File.Exists(filePath))
+            {
+                FileStream fs = File.Create(filePath);
+                fs.Close();
+            }
+        }
+
         public static void displayMsg()
         {
             Console.WriteLine("**************************************************************************");
@@ -163,5 +182,15 @@ namespace UploadSFCS
             Console.WriteLine("*    FixtureID:the fixture id,eg:15203-1-L                               *");
             Console.WriteLine("**************************************************************************");
         }
+
+
+        public static void KillProcess()
+        {
+            System.Diagnostics.Process[] excelProcess = System.Diagnostics.Process.GetProcessesByName("ksh");
+            foreach (System.Diagnostics.Process p in excelProcess)
+                p.Kill();
+        }
+
+
     }
 }
