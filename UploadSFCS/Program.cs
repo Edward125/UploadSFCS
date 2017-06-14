@@ -116,6 +116,7 @@ namespace UploadSFCS
         private static  bool checkWebSite(string website)
         {
             ws.Url = webSite;
+            SaveSysInfo("Start to connect webservice,->" + website);
             try
             {
                 ws.Discover();
@@ -124,10 +125,13 @@ namespace UploadSFCS
             {
                 Console.WriteLine( DateTime.Now.ToString ("yyyyMMddHHmmss") + " Connect WebService error.");
                 Console.WriteLine(ex.Message);
-                Console.WriteLine(DateTime.Now.ToString("yyyyMMddHHmmss") + " pls check the websit or network.");                
+                Console.WriteLine(DateTime.Now.ToString("yyyyMMddHHmmss") + " pls check the websit or network.");
+                SaveSysInfo("Connect WebService error, pls check the websit or network.");
+                SaveSysInfo (ex.Message);
                 return false;
             }            
             Console.WriteLine(DateTime.Now.ToString("yyyyMMddHHmmss") + " Connect WebService ok.");
+            SaveSysInfo("Connect WebService ok.");
             return true;
         }
 
@@ -153,6 +157,25 @@ namespace UploadSFCS
 
 
 
+        public static void SaveSysInfo(string logcontent)
+        {
+            string appFolder = Application.StartupPath + @"\UploadSFCS";
+            string filePath = appFolder + @"\" + "Sys_" +@DateTime.Now.ToString("yyyyMMdd") + ".log";
+            string log = DateTime.Now.ToString("yyyyMMddHHmmss") + " " + logcontent + "\r\n";
+            if (!Directory.Exists(appFolder))
+                Directory.CreateDirectory(appFolder);
+            if (!File.Exists(filePath))
+            {
+                FileStream fs = File.Create(filePath);
+                fs.Close();
+            }
+            //
+            File.AppendAllText(@filePath, @log);
+
+           
+        }
+
+
         public static void checkfolder_file()
         {
             string appFolder = Application.StartupPath + @"\UploadSFCS";
@@ -172,7 +195,7 @@ namespace UploadSFCS
         {
             Console.WriteLine("**************************************************************************");
             Console.WriteLine("*    UploadSFCS use command via webservice                               *");
-            Console.WriteLine("*    Ver:1.0.0.0, Author:WCD ATE Edward_song@yeah.net                    *");
+            Console.WriteLine("*    Ver:" + Application.ProductVersion +", Author:WCD ATE Edward_song@yeah.net                    *");
             Console.WriteLine("**************************************************************************");
             Console.WriteLine("*    Command List:                                                       *");
             Console.WriteLine("*    UploadSFCS.exe PPID  Line Stage OPID PassFlag ErrorCode FixtureID   *");
