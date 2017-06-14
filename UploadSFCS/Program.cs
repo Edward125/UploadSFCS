@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Web;
 using System.Drawing;
+using System.Diagnostics;
 
 
 
@@ -40,6 +41,7 @@ namespace UploadSFCS
             if (!checkWebSite(webSite))
             {
                 //error
+
             }
 
 
@@ -78,7 +80,8 @@ namespace UploadSFCS
                     Console.WriteLine(DateTime.Now.ToString("yyyyMMddHHmmss") + " " + PPID + "->upload NG," + result);
                 }
 
-                KillProcess();
+               // KillProcess();
+                KillAllProcess("ksh");
             }
             else 
             {
@@ -191,6 +194,16 @@ namespace UploadSFCS
                 p.Kill();
         }
 
+        public static void KillAllProcess(string processname)
+        {
+            System.Diagnostics.Process[] process;
+            process = Process.GetProcesses();
+            foreach (Process p in process)
+            {
+                if (p.ProcessName == processname)
+                    p.Kill();
+            }
+        }
 
     }
 }
